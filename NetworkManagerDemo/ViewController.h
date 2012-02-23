@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AiromoRequestDelegate.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UITextFieldDelegate, AiromoRequestDelegate>
+
+@property (nonatomic, retain) IBOutlet UIButton *buttonStart;
+@property (nonatomic, retain) IBOutlet UITextField *textAppName;
+@property (nonatomic, retain) IBOutlet UIView *shadowView;
+@property (nonatomic, retain) IBOutlet UITextView *log;
+
+- (IBAction)onStartAction:(id)sender;
 
 @end
