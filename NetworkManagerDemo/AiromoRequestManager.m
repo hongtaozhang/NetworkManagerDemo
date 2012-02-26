@@ -9,10 +9,11 @@
 #import "AiromoRequestManager.h"
 #import "Global.h"
 #import "NSString+SBJSON.h"
+#import "NSObject+SBJSON.h"
 #import "NSString+Extensions.m"
 
 @interface AiromoRequestManager (PrivateMethods)
-- (void)sendRequest:(NSString *)queryString withMethod:(NSString *)method;
+- (void)sendRequest:(NSString *)queryStringOrServiceName withMethod:(NSString *)method andJSONParams:(NSDictionary *)params;
 - (void)performCleanup;
 @end
 
@@ -57,10 +58,10 @@
 
 #pragma mark - Helper methods
 
-- (void)sendRequest:(NSString *)queryString withMethod:(NSString *)method
+- (void)sendRequest:(NSString *)queryStringOrServiceName withMethod:(NSString *)method andJSONParams:(NSDictionary *)params
 {
     NSString *fullURLString = nil;
-    if (queryString == nil) {
+    if (queryStringOrServiceName == nil) {
         fullURLString = [NSString stringWithString:[NSString encodeHTTPCharactersIn:self.urlString]];
     }
     else {
@@ -68,7 +69,7 @@
         if ([self.urlString hasSuffix:@"/"]) {
             format = @"%@%@";
         }
-        fullURLString = [NSString stringWithFormat:format, [NSString encodeHTTPCharactersIn:self.urlString], [NSString encodeHTTPCharactersIn:queryString]];
+        fullURLString = [NSString stringWithFormat:format, [NSString encodeHTTPCharactersIn:self.urlString], [NSString encodeHTTPCharactersIn:queryStringOrServiceName]];
     }
     AILOG(@"Requesting url: %@", fullURLString);
     
@@ -78,8 +79,16 @@
 													   timeoutInterval:AIROMO_REQUEST_TIMEOUT];
     
 	[request setHTTPMethod:method];
+    if (params != nil && [params count]) {
+        [request setHTTPMethod:@"POST"];
+        [request addValue: @"application/json" forHTTPHeaderField:@"Content-Type"];
+        NSString *json = [params JSONRepresentation];    
+        NSData *post = [json dataUsingEncoding:NSUTF8StringEncoding];
+        AILOG(@"POST %@", json);
+        [request setValue:[NSString stringWithFormat:@"%d", [post length]] forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPBody:post]; 
+    }
     [request setTimeoutInterval:AIROMO_REQUEST_TIMEOUT];
-    
 
     // Init the timer
     _timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:AIROMO_REQUEST_TIMEOUT target:self selector:@selector(checkActivity:) userInfo:nil repeats:YES];
@@ -121,14 +130,14 @@
     [self sendPostRequest:nil];
 }
 
-- (void)sendEmptyGetRequest
-{
-    [self sendGetRequest:nil];
-}
-
 - (void)sendPostRequest:(NSString *)queryString
 {
-    [self sendRequest:queryString withMethod:@"POST"];
+    [self sendRequest:queryString withMethod:@"POST" andJSONParams:nil];
+}
+
+- (void)sendPostRequest:(NSString *)queryString withJSONParams:(NSDictionary *)params
+{
+    [self sendRequest:queryString withMethod:@"POST"  andJSONParams:params];
 }
 
 //- (void)sendPostRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action
@@ -138,9 +147,19 @@
 //    [self sendRequest:queryString withMethod:@"POST"];
 //}
 
+- (void)sendEmptyGetRequest
+{
+    [self sendGetRequest:nil];
+}
+
 - (void)sendGetRequest:(NSString *)queryString
 {
-    [self sendRequest:queryString withMethod:@"GET"];
+    [self sendRequest:queryString withMethod:@"GET" andJSONParams:nil];
+}
+
+- (void)sendGetRequest:(NSString *)queryString withJSONParams:(NSDictionary *)params
+{
+    [self sendRequest:queryString withMethod:@"GET" andJSONParams:params];
 }
 
 //- (void)sendGETRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action
@@ -161,13 +180,13 @@
     id response = nil;
     if (self.receivedData) {
         NSString *stringReply = (NSString *)[[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding];
-            if (stringReply) {
-                if ([stringReply respondsToSelector:@selector(JSONValue)])
-                     response = [stringReply JSONValue];
-                if (response == nil)
-                     response = [NSString stringWithString:stringReply];
-                [stringReply release];
-            }
+        if (stringReply) {
+            if ([stringReply respondsToSelector:@selector(JSONValue)])
+                response = [stringReply JSONValue];
+            if (response == nil)
+                response = [NSString stringWithString:stringReply];
+            [stringReply release];
+        }
     }
 	return response;
 }

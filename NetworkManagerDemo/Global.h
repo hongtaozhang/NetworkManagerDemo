@@ -2,12 +2,17 @@
 #import <Foundation/Foundation.h>
 #import "ActivityIndicator.h"
 
+/**
+ * Tags to return type of device
+ */
 typedef enum {
     kDeviceIPhone = 0,
     kDeviceIPad
 } DeviceType;
 
-//Getting device type
+/**
+ * Gets device type
+ */
 CG_INLINE DeviceType deviceType()
 {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 30200
@@ -20,17 +25,46 @@ CG_INLINE DeviceType deviceType()
 #endif
 }
 
+/**
+ * Returns true if device is an iPad
+ */
 CG_INLINE BOOL isPad()
 {
 	return (BOOL)(deviceType() == kDeviceIPad);
 }
 
+/**
+ * Airomo client tag
+ */
+typedef enum {
+    kClientTagAuth = 0,
+    kClientTagFacebookAuth,
+    kClientTagSignup
+} AMClientTags;
+
+/**
+ * Appcurl.com client tag
+ */
+typedef enum {
+    kACClientTagGetApp = 3,
+    kACClientTagQuickSearchApp
+} AppCurlClientTags;
+
+/**
+ * More verbose logger than standard use to output line number and function number
+ * If DEBUG option specifiend in the build, it has meaning. Otherwise macros is empty
+ */
 #ifdef DEBUG
 #define AILOG(xx, ...)  NSLog(@"%s(%d): " xx, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define AILOG(xx, ...) ((void)0)
 #endif
 
+/**
+ * Useful functions that create color by cpecifying all RGBA (reg-green-blue-alpha) values. In first
+ * case the color has an byte integer value from 0 to 255. The second gives an opportunity to specify
+ * floating values between 0 and 1.0
+ */
 #define AI_RGBA(r,g,b,a)                    [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:a]
 #define AI_RGBAF(r,g,b,a)                   [UIColor colorWithRed:(r) green:(g) blue:(b) alpha:a]
 
@@ -228,8 +262,8 @@ CG_INLINE BOOL isPad()
 
 // AppCurl requests
 #define APPCURL_API_URL                     @"http://api.appcurl.com/"
-#define METHOD_APPFIND_1                    @"mqs?q=%@&platform=1"
-#define METHOD_APPFIND_2                    @"parsepn?platform=1&pn=%@"
+#define APPCURL_MQS_METHOD                  @"mqs?q=%@&platform=1"
+#define APPCURL_PARCEPN_METHOD              @"parsepn?platform=1&pn=%@"
 #define USER_APP_FILE                       @"userapps.plist"
 #define APPCURL_REQUEST_TIMEOUT             15.0
 

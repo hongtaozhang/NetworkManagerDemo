@@ -20,7 +20,7 @@ typedef enum
 } AiromoRequestStatus;
 
 
-@interface AiromoRequestManager : NSObject <NSURLConnectionDataDelegate> {
+@interface AiromoRequestManager : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate> {
 	NSObject<AiromoRequestDelegate>* _delegate;
     AiromoRequestStatus _status;
     NSDate *_lastActivityTime;
@@ -46,12 +46,16 @@ typedef enum
 - (id)initWithURLString:(NSString *)urlString;
 - (id)initWithURLString:(NSString *)urlString andDelegate:(id)delegate;
 
-// Main routines
+// Get requests
 - (void)sendEmptyPostRequest;
-- (void)sendEmptyGetRequest;
 - (void)sendPostRequest:(NSString *)queryString;
-- (void)sendGetRequest:(NSString *)queryString;
+- (void)sendPostRequest:(NSString *)queryString withJSONParams:(NSDictionary *)params;
 //- (void)sendPostRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action;
+
+// Get requests
+- (void)sendEmptyGetRequest;
+- (void)sendGetRequest:(NSString *)queryString;
+- (void)sendGetRequest:(NSString *)queryString withJSONParams:(NSDictionary *)params;
 //- (void)sendGetRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action;
 
 // Cancel request
