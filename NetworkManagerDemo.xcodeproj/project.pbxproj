@@ -17,6 +17,8 @@
 		445BFDAA14F3C97F001140AC /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 445BFDA814F3C97F001140AC /* ViewController_iPad.xib */; };
 		445BFDB314F3CD0A001140AC /* AiromoRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 445BFDB214F3CD0A001140AC /* AiromoRequestManager.m */; };
 		445BFDB914F3CF39001140AC /* ActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 445BFDB814F3CF39001140AC /* ActivityIndicator.m */; };
+		44BF48FC14F7B3EE00A51F5D /* AMClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BF48FB14F7B3EE00A51F5D /* AMClient.m */; };
+		44BF491C14FA788900A51F5D /* AppCurlClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BF491B14FA788800A51F5D /* AppCurlClient.m */; };
 		44FB89F714F3D409001334B8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FB89F614F3D409001334B8 /* CoreGraphics.framework */; };
 		44FB8A1A14F3E5C0001334B8 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FB8A0F14F3E5C0001334B8 /* NSObject+SBJSON.m */; };
 		44FB8A1B14F3E5C0001334B8 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FB8A1114F3E5C0001334B8 /* NSString+SBJSON.m */; };
@@ -47,6 +49,11 @@
 		445BFDB414F3CD53001140AC /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		445BFDB714F3CF39001140AC /* ActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityIndicator.h; sourceTree = "<group>"; };
 		445BFDB814F3CF39001140AC /* ActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityIndicator.m; sourceTree = "<group>"; };
+		44BF48FA14F7B3EE00A51F5D /* AMClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMClient.h; sourceTree = "<group>"; };
+		44BF48FB14F7B3EE00A51F5D /* AMClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMClient.m; sourceTree = "<group>"; };
+		44BF491914F98A9800A51F5D /* AMDataReceiverDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMDataReceiverDelegate.h; sourceTree = "<group>"; };
+		44BF491A14FA788800A51F5D /* AppCurlClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppCurlClient.h; sourceTree = "<group>"; };
+		44BF491B14FA788800A51F5D /* AppCurlClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppCurlClient.m; sourceTree = "<group>"; };
 		44FB89F614F3D409001334B8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		44FB8A0D14F3E5C0001334B8 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		44FB8A0E14F3E5C0001334B8 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
@@ -109,14 +116,19 @@
 		445BFD9614F3C97F001140AC /* NetworkManagerDemo */ = {
 			isa = PBXGroup;
 			children = (
+				44FB89F914F3E573001334B8 /* JSON */,
 				44FB8A2014F3EB40001334B8 /* NSString+Extensions.h */,
 				44FB8A2114F3EB40001334B8 /* NSString+Extensions.m */,
 				445BFDB714F3CF39001140AC /* ActivityIndicator.h */,
 				445BFDB814F3CF39001140AC /* ActivityIndicator.m */,
-				44FB89F914F3E573001334B8 /* JSON */,
 				445BFDB414F3CD53001140AC /* Global.h */,
+				44BF48FA14F7B3EE00A51F5D /* AMClient.h */,
+				44BF48FB14F7B3EE00A51F5D /* AMClient.m */,
+				44BF491A14FA788800A51F5D /* AppCurlClient.h */,
+				44BF491B14FA788800A51F5D /* AppCurlClient.m */,
 				445BFDB114F3CD0A001140AC /* AiromoRequestManager.h */,
 				445BFDB214F3CD0A001140AC /* AiromoRequestManager.m */,
+				44BF491914F98A9800A51F5D /* AMDataReceiverDelegate.h */,
 				445BFDB014F3CD0A001140AC /* AiromoRequestDelegate.h */,
 				445BFD9F14F3C97F001140AC /* AppDelegate.h */,
 				445BFDA014F3C97F001140AC /* AppDelegate.m */,
@@ -236,6 +248,8 @@
 				44FB8A1E14F3E5C0001334B8 /* SBJsonParser.m in Sources */,
 				44FB8A1F14F3E5C0001334B8 /* SBJsonWriter.m in Sources */,
 				44FB8A2214F3EB40001334B8 /* NSString+Extensions.m in Sources */,
+				44BF48FC14F7B3EE00A51F5D /* AMClient.m in Sources */,
+				44BF491C14FA788900A51F5D /* AppCurlClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
