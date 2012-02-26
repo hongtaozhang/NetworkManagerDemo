@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AiromoRequestDelegate.h"
+#import "AMDataReceiverDelegate.h"
 
-@interface ViewController : UIViewController <UITextFieldDelegate, AiromoRequestDelegate>
+@interface ViewController : UIViewController <UITextFieldDelegate, AMDataReceiverDelegate>
 
 @property (nonatomic, retain) IBOutlet UIButton *buttonStart;
 @property (nonatomic, retain) IBOutlet UITextField *textAppName;
 @property (nonatomic, retain) IBOutlet UIView *shadowView;
 @property (nonatomic, retain) IBOutlet UITextView *log;
+@property (nonatomic, retain) IBOutlet UISwitch *quickSearchSwitch;
 
 - (IBAction)onStartAction:(id)sender;
 

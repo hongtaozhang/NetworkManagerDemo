@@ -9,7 +9,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ViewController.h"
 #import "Global.h"
-#import "AiromoRequestManager.h"
+#import "AMClient.h"
+#import "AppCurlClient.h"
 
 #define TEMP_URL                            @"http://pankratov.net.ua/downloads/"
 
@@ -25,6 +26,7 @@
 @synthesize textAppName = _textAppName;
 @synthesize shadowView  = _shadowView;
 @synthesize log         = _log;
+@synthesize quickSearchSwitch = _quickSearchSwitch;
 
 - (void)didReceiveMemoryWarning
 {
@@ -35,7 +37,10 @@
 - (void)dealloc
 {
     [_buttonStart release];
+    [_textAppName release];
+    [_shadowView release];
     [_log release];
+    [_quickSearchSwitch release];
 }
 
 - (void)addLogMessage:(NSString *)message
@@ -123,15 +128,14 @@
 
 - (void)doDefaultRequest
 {
+    [self addLogMessage:@"Client is being connected"];
     [[ActivityIndicator currentIndicator] displayActivity:@"Performing query..."];
-    AiromoRequestManager *netMan = [[[AiromoRequestManager alloc] initWithURLString:TEMP_URL andDelegate:self] autorelease];
-    [netMan sendGetRequest:@""];
+    [[AMClient currentClientDelegate:self] authWithEmail:@"spreg@i.ua" andPassword:@"12345"];
 }
 
 - (IBAction)onStartAction:(id)sender
 {
     [_textAppName resignFirstResponder];
-    [self addLogMessage:@"Query is being executed"];
 
     NSString *appName = [_textAppName text];
     if (appName == nil || [appName length] == 0) {
@@ -141,36 +145,23 @@
         [self performSelector:@selector(doDefaultRequest) withObject:nil afterDelay:3];
     } else {
         [[ActivityIndicator currentIndicator] displayActivity:@"Performing query..."];
-        AiromoRequestManager *netMan = [[[AiromoRequestManager alloc] initWithURLString:APPCURL_API_URL andDelegate:self] autorelease];
-        [netMan sendGetRequest:[NSString stringWithFormat:METHOD_APPFIND_1, appName]];
+        if ([self.quickSearchSwitch isOn]) {
+            [self addLogMessage:@"Query is being executed"];
+            [[AppCurlClient currentClientDelegate:self] quickSearchForApp:appName];
+        } else {
+            [self addLogMessage:@"Parce process name query being executed"];
+            [[AppCurlClient currentClientDelegate:self] findSuggestionForApp:appName];
+        }
     }
 }
 
-#pragma mark - Network manager delegate
+#pragma mark - Data receiver delegate
 
-- (void)requestDataRecieved:(id)request
+- (void)dataReceivedWithData:(NSDictionary *)object
 {
-//    [self addLogMessage:@"data received"];
-}
-
-- (void)requestFailed:(id)request
-{
-    AiromoRequestManager *netMan = (AiromoRequestManager *) request;
-    [self addLogMessage:[NSString stringWithFormat:@"the query failed with the message: %@", netMan.connectionError]];
-    [[ActivityIndicator currentIndicator] displayFailed:@"Request failed"];
-}
-
-- (void)requestFinished:(id)request
-{
-    AiromoRequestManager *netMan = (AiromoRequestManager *) request;
-    [self addLogMessage:[NSString stringWithFormat:@"the query finished with the answer: %@", netMan.encodedResponse]];
+    NSString *string = [NSString stringWithFormat:@"Received object: %@", object];
+    [self addLogMessage:string];
     [[ActivityIndicator currentIndicator] displayCompleted:@"Finished"];
-}
-
-- (void)requestTimeoutExceeded:(id)request
-{
-    [self addLogMessage:@"the query timeout exceeded"];
-    [[ActivityIndicator currentIndicator] hide];
 }
 
 @end
