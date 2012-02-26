@@ -53,7 +53,7 @@ static AMClient *currentClient;
 
 - (id)initWithDelegate:(NSObject<AMDataReceiverDelegate> *)delegate
 {
-    if (self = [super init]) {
+    if ((self = [super init]) != nil) {
         [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
                                                                  @"", @"airomoToken",
                                                                  @"", @"airomoUserEmail",
@@ -155,4 +155,3 @@ static AMClient *currentClient;
 }
 
 @end
-

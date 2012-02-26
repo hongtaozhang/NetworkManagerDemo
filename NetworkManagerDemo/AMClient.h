@@ -21,7 +21,7 @@
     // APNS token
     NSString *_apnsToken;
     BOOL _rememberme;
-    
+
     // Networking stuff
     AMClientTags _tag;
     AiromoRequestManager *_request;
