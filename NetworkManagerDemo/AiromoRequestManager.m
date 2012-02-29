@@ -19,12 +19,15 @@
 
 @implementation AiromoRequestManager
 
-@synthesize delegate        = _delegate;
-@synthesize status          = _status;
-@synthesize timeoutValue    = _timeoutValue;
-@synthesize connectionError = _connectionError;
-@synthesize receivedData    = _receivedData;
-@synthesize urlString       = _urlString;
+@synthesize delegate         = _delegate;
+@synthesize status           = _status;
+@synthesize tag              = _tag;
+@synthesize lastActivityTime = _lastActivityTime;
+@synthesize timeoutValue     = _timeoutValue;
+@synthesize connectionError  = _connectionError;
+@synthesize receivedData     = _receivedData;
+@synthesize urlString        = _urlString;
+@synthesize queryString      = _queryString;
 
 - (id)init
 {
@@ -40,11 +43,9 @@
 {
     self = [super init];
     if (self) {
-        _lastActivityTime = [NSDate date];
+        self.lastActivityTime = [NSDate date];
         _timeoutTimer = nil;
         _urlConnection = nil;
-        _target = nil;
-        _action = nil;
         self.delegate = delegate;
         self.status = kAiromoRequestInProgress;
         self.timeoutValue = AIROMO_REQUEST_TIMEOUT;
@@ -72,6 +73,7 @@
         fullURLString = [NSString stringWithFormat:format, [NSString encodeHTTPCharactersIn:self.urlString], [NSString encodeHTTPCharactersIn:queryStringOrServiceName]];
     }
     AILOG(@"Requesting url: %@", fullURLString);
+    self.queryString = queryStringOrServiceName;
     
 	NSURL *url = [NSURL URLWithString:fullURLString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url
@@ -96,7 +98,7 @@
     // Turn on indicator
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     // Start query
-    _urlConnection = [[[NSURLConnection alloc] initWithRequest:request delegate:self] autorelease];
+    _urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 - (void)performCleanup;
@@ -112,14 +114,12 @@
         [_timeoutTimer invalidate];
     }
     
-    // Perform finishing selectors
-    if (_status != kAiromoRequestFailed && [_delegate respondsToSelector:@selector(requestFinished:)]) {
+    // Perform finishing selectors only when
+    if (_status != kAiromoRequestFailed && _status != kAiromoRequestTimedOut && [_delegate respondsToSelector:@selector(requestFinished:)]) {
 		[_delegate requestFinished:self];
     }
-//	if ([_target respondsToSelector:_action]) {
-//		[_target performSelector:_action withObject:self];
-//	}
     
+	[_urlConnection release];
 	_urlConnection = nil;
 }
 
@@ -137,15 +137,8 @@
 
 - (void)sendPostRequest:(NSString *)queryString withJSONParams:(NSDictionary *)params
 {
-    [self sendRequest:queryString withMethod:@"POST"  andJSONParams:params];
+    [self sendRequest:queryString withMethod:@"POST" andJSONParams:params];
 }
-
-//- (void)sendPostRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action
-//{
-//    _target = target;
-//    _action = action;
-//    [self sendRequest:queryString withMethod:@"POST"];
-//}
 
 - (void)sendEmptyGetRequest
 {
@@ -161,13 +154,6 @@
 {
     [self sendRequest:queryString withMethod:@"GET" andJSONParams:params];
 }
-
-//- (void)sendGETRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action
-//{
-//    _target = target;
-//    _action = action;
-//    [self sendRequest:queryString withMethod:@"GET"];
-//}
 
 - (void)cancelRequest
 {
@@ -195,7 +181,7 @@
 
 -(void)checkActivity:(NSTimer *)timer
 {
-    if ([[NSDate date] timeIntervalSinceDate:_lastActivityTime] > self.timeoutValue) {
+    if ([[NSDate date] timeIntervalSinceDate:self.lastActivityTime] > self.timeoutValue) {
         AILOG(@"Request timeout");
         _status = kAiromoRequestTimedOut;
         if([_delegate respondsToSelector:@selector(requestTimeoutExceeded:)]) {
@@ -213,7 +199,7 @@
 	// Initial response
 	[self.receivedData setLength:0];
     // Update activity
-    _lastActivityTime = [NSDate date];
+    self.lastActivityTime = [NSDate date];
 
 	NSHTTPURLResponse *httpResponse = [(NSHTTPURLResponse*)response retain];
     
@@ -240,7 +226,7 @@
 - (void)connection:(NSURLConnection *)conn didReceiveData:(NSData *)data
 {
     // Update activity
-    _lastActivityTime = [NSDate date];
+    self.lastActivityTime = [NSDate date];
     // And data
 	[self.receivedData appendData:data];
 
@@ -293,7 +279,9 @@
 
 -(void)dealloc
 {
+    [_lastActivityTime release];
     [_urlString release];
+    [_queryString release];
 	[_receivedData release];
 	[_connectionError release];
 	

@@ -34,21 +34,38 @@ CG_INLINE BOOL isPad()
 }
 
 /**
- * Airomo client tag
+ * Network request tags
  */
 typedef enum {
-    kClientTagAuth = 0,
-    kClientTagFacebookAuth,
-    kClientTagSignup
-} AMClientTags;
+    kRequestTagAuth = 0,
+    kRequestTagFacebookAuth,
+    kRequestTagSignup,
+    kRequestTagGetApp,
+    kRequestTagQuickSearchApp,
+    kRequestTagTemp
+} AiromoRequestTags;
 
 /**
- * Appcurl.com client tag
+ * Network request statuses
  */
-typedef enum {
-    kACClientTagGetApp = 3,
-    kACClientTagQuickSearchApp
-} AppCurlClientTags;
+typedef enum
+{
+    kAiromoRequestUnknownStatus = -1,
+    kAiromoRequestSuccessfulyCompleted = 0,
+    kAiromoRequestCanceled,
+    kAiromoRequestTimedOut,
+    kAiromoRequestInProgress,
+    kAiromoRequestFailed
+} AiromoRequestStatus;
+
+/**
+ * Tag definition for payload for data answer in networkong clients
+ */
+static NSString const * kDataPayloadErrorKey = @"error";
+static NSString const * kDataPayloadTagKey   = @"tag";
+static NSString const * kDataPayloadKey      = @"payload";
+static NSString const * kDataPayloadUrlKey   = @"url";
+static NSString const * kDataPayloadQueryKey = @"query";
 
 /**
  * More verbose logger than standard use to output line number and function number

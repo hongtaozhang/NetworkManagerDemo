@@ -16,8 +16,8 @@ static AppCurlClient *currentClient;
 
 @implementation AppCurlClient
 
-@synthesize tag = _tag;
-@synthesize request = _request;
+@synthesize tag      = _tag;
+@synthesize request  = _request;
 @synthesize delegate = _delegate;
 
 + (AppCurlClient *)currentClient
@@ -55,7 +55,7 @@ static AppCurlClient *currentClient;
     if (self.request) {
         self.request = nil;
     }
-    self.tag = kACClientTagGetApp;
+    self.tag = kRequestTagGetApp;
     _request = [[AiromoRequestManager alloc] initWithURLString:APPCURL_API_URL andDelegate:self];
     [self.request sendGetRequest:[NSString stringWithFormat:APPCURL_PARCEPN_METHOD, appName]];
 }
@@ -65,7 +65,7 @@ static AppCurlClient *currentClient;
     if (self.request) {
         self.request = nil;
     }
-    self.tag = kACClientTagQuickSearchApp;
+    self.tag = kRequestTagQuickSearchApp;
     _request = [[AiromoRequestManager alloc] initWithURLString:APPCURL_API_URL andDelegate:self];
     [self.request sendGetRequest:[NSString stringWithFormat:APPCURL_MQS_METHOD, appName]];
 }

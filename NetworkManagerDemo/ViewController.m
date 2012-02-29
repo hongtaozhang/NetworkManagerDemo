@@ -10,9 +10,8 @@
 #import "ViewController.h"
 #import "Global.h"
 #import "AMClient.h"
+#import "AMClient2.h"
 #import "AppCurlClient.h"
-
-#define TEMP_URL                            @"http://pankratov.net.ua/downloads/"
 
 @interface ViewController (PrivateMethods)
 
@@ -130,7 +129,13 @@
 {
     [self addLogMessage:@"Client is being connected"];
     [[ActivityIndicator currentIndicator] displayActivity:@"Performing query..."];
-    [[AMClient currentClientDelegate:self] authWithEmail:@"spreg@i.ua" andPassword:@"12345"];
+    [[AMClient2 currentClientDelegate:self] authWithEmail:@"spreg@i.ua" andPassword:@"12345"];
+//    [[AMClient2 currentClientDelegate:self] startFacebookToken:@"someleveytoken"];
+
+//    [[AMClient currentClientDelegate:self] authWithEmail:@"spreg@i.ua" andPassword:@"12345"];
+//    [[AMClient currentClientDelegate:self] doTempCall:@"test0.php"];
+//    [[AMClient currentClientDelegate:self] doTempCall:@"test1.php"];
+//    [[AMClient currentClientDelegate:self] doTempCall:@"test2.php"];
 }
 
 - (IBAction)onStartAction:(id)sender
@@ -161,7 +166,13 @@
 {
     NSString *string = [NSString stringWithFormat:@"Received object: %@", object];
     [self addLogMessage:string];
-    [[ActivityIndicator currentIndicator] displayCompleted:@"Finished"];
+    NSUInteger count = [[AMClient currentClient] aliveRequests];
+    if (count > 0) {
+        [[ActivityIndicator currentIndicator] displayActivity:[NSString stringWithFormat:@"%u queries are still active...", count]];
+    }
+    else {
+        [[ActivityIndicator currentIndicator] displayCompleted:@"Finished"];
+    }
 }
 
 @end

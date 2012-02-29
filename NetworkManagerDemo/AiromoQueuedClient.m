@@ -1,54 +1,44 @@
 //
-//  AMClient.m
+//  AiromoQueuedClient.m
 //  NetworkManagerDemo
 //
 //  Created by Eugene Pankratov on 24.02.12.
 //  Copyright (c) 2012 pankratov.net.ua. All rights reserved.
 //
 
-#import "AMClient.h"
+#import "AiromoQueuedClient.h"
 
-static AMClient *currentClient;
+static AiromoQueuedClient *currentBaseClient;
 
-@interface AMClient (PrivateMethods)
+@interface AiromoQueuedClient (PrivateMethods)
 
 - (id)initWithDelegate:(NSObject<AMDataReceiverDelegate> *)delegate;
-//- (void)doTempCall:(NSString *)url;
 
 @end
 
-@implementation AMClient
+@implementation AiromoQueuedClient
 
-@synthesize email      = _email;
-@synthesize password   = _password;
-@synthesize authToken  = _authToken;
-@synthesize apnsToken  = _apnsToken;
-@synthesize rememberme = _rememberme;
 @synthesize queue      = _queue;
 @synthesize delegate   = _delegate;
 
-+ (AMClient *)currentClient
++ (AiromoQueuedClient *)currentClient
 {
-    if (currentClient == nil) {
-        currentClient = [[AMClient alloc] initWithDelegate:nil];
+    if (currentBaseClient == nil) {
+        currentBaseClient = [[AiromoQueuedClient alloc] initWithDelegate:nil];
     }
-    return currentClient;
+    return currentBaseClient;
 }
 
-+ (AMClient *)currentClientDelegate:(NSObject<AMDataReceiverDelegate> *)delegate
++ (AiromoQueuedClient *)currentClientDelegate:(NSObject<AMDataReceiverDelegate> *)delegate
 {
-    if (currentClient == nil) {
-        currentClient = [[AMClient alloc] initWithDelegate:delegate];
+    if (currentBaseClient == nil) {
+        currentBaseClient = [[AiromoQueuedClient alloc] initWithDelegate:delegate];
     }
-    return currentClient;
+    return currentBaseClient;
 }
 
 - (void)dealloc
 {
-    [_apnsToken release];
-    [_authToken release];
-    [_email release];
-    [_password release];
     [_queue release];
     [super dealloc];
 }
@@ -56,59 +46,34 @@ static AMClient *currentClient;
 - (id)initWithDelegate:(NSObject<AMDataReceiverDelegate> *)delegate
 {
     if ((self = [super init]) != nil) {
-        [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                                 @"", @"airomoToken",
-                                                                 @"", @"airomoUserEmail",
-                                                                 @"", @"airomoPassword",
-                                                                 [NSDate date], @"airomoTokenStamp",
-                                                                 nil]];
         _queue = [[NSMutableArray alloc] init];
         self.delegate = delegate;
     }
     return self;
 }
 
-- (void)authWithEmail:(NSString *)email andPassword:(NSString *)password
+- (void)sendUniversalRequest:(NSDictionary *)params andTag:(AiromoRequestTags)tag
 {
-    self.email = email;
-    self.password = password;
-
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: self.email, @"email", self.password, @"password", nil];
     AiromoRequestManager *request = [[AiromoRequestManager alloc] initWithURLString:AIROMO_URL andDelegate:self];
-    request.tag = kRequestTagAuth;
+    request.tag = tag;
     [self.queue addObject:request];
-    [request sendPostRequest:@"auth/password" withJSONParams:params];
+
+    // Choose the request depending on tag
+    switch (tag) {
+        case kRequestTagAuth:
+            [request sendPostRequest:@"auth/password" withJSONParams:params];
+            break;
+        case kRequestTagFacebookAuth:
+            [request sendGetRequest:@"auth/facebook" withJSONParams:params];
+            break;
+        case kRequestTagSignup:
+            [request sendPostRequest:@"signup" withJSONParams:params];
+            break;
+            
+        default:
+            break;
+    }
     [request release];
-}
-
-- (void)startFacebookToken:(NSString*)token
-{
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: token, @"token", nil];
-    AiromoRequestManager *request = [[AiromoRequestManager alloc] initWithURLString:AIROMO_URL andDelegate:self];
-    request.tag = kRequestTagFacebookAuth;
-    [self.queue addObject:request];
-    [request sendGetRequest:@"auth/facebook" withJSONParams:params];
-    [request release];
-}
-
-- (void)signup:(NSString *)email password:(NSString *)password
-{
-    self.email = email;
-    self.password = password;
-
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys: self.email, @"username", self.password, @"password", nil];
-    AiromoRequestManager *request = [[AiromoRequestManager alloc] initWithURLString:AIROMO_URL andDelegate:self];
-    request.tag = kRequestTagSignup;
-    [self.queue addObject:request];
-    [request sendPostRequest:@"signup" withJSONParams:params];
-    [request release];
-}
-
-- (void)logout
-{
-    self.email = @"";
-    self.password = @"";
-    self.authToken = @"";
 }
 
 - (NSUInteger)aliveRequests
@@ -121,15 +86,6 @@ static AMClient *currentClient;
     }
     return alive;
 }
-
-//- (void)doTempCall:(NSString *)url
-//{
-//    AiromoRequestManager *request = [[AiromoRequestManager alloc] initWithURLString:@"https://pankratov.net.ua/~eugene/test/" andDelegate:self];
-//    request.tag = kRequestTagTemp;
-//    [self.queue addObject:request];
-//    [request sendGetRequest:url];
-//    [request release];
-//}
 
 #pragma mark - AiromoRequestDelegate methods
 

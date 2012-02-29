@@ -8,39 +8,31 @@
 
 #import <Foundation/Foundation.h>
 #import "AiromoRequestDelegate.h"
-
-typedef enum
-{
-    kAiromoRequestUnknownStatus = -1,
-    kAiromoRequestSuccessfulyCompleted = 0,
-    kAiromoRequestCanceled,
-    kAiromoRequestTimedOut,
-    kAiromoRequestInProgress,
-    kAiromoRequestFailed
-} AiromoRequestStatus;
-
+#import "Global.h"
 
 @interface AiromoRequestManager : NSObject <NSURLConnectionDelegate, NSURLConnectionDataDelegate> {
 	NSObject<AiromoRequestDelegate>* _delegate;
     AiromoRequestStatus _status;
+    AiromoRequestTags _tag;
     NSDate *_lastActivityTime;
     NSTimeInterval _timeoutValue;
     NSTimer *_timeoutTimer;
 	NSError *_connectionError;
 	NSMutableData *_receivedData;
     NSString *_urlString;
+    NSString *_queryString;
 	NSURLConnection *_urlConnection;
-    
-	id _target;
-	SEL _action;
 }
 
 @property (nonatomic, assign) NSObject<AiromoRequestDelegate>* delegate;
-@property AiromoRequestStatus status;
-@property NSTimeInterval timeoutValue;
+@property (nonatomic, assign) AiromoRequestStatus status;
+@property (nonatomic, assign) AiromoRequestTags tag;
+@property (nonatomic, retain) NSDate *lastActivityTime;
+@property (nonatomic, assign) NSTimeInterval timeoutValue;
 @property (nonatomic, retain) NSError *connectionError;
 @property (nonatomic, retain) NSMutableData *receivedData;
 @property (nonatomic, retain) NSString *urlString;
+@property (nonatomic, retain) NSString *queryString;
 
 // Initialization
 - (id)initWithURLString:(NSString *)urlString;
@@ -50,13 +42,11 @@ typedef enum
 - (void)sendEmptyPostRequest;
 - (void)sendPostRequest:(NSString *)queryString;
 - (void)sendPostRequest:(NSString *)queryString withJSONParams:(NSDictionary *)params;
-//- (void)sendPostRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action;
 
 // Get requests
 - (void)sendEmptyGetRequest;
 - (void)sendGetRequest:(NSString *)queryString;
 - (void)sendGetRequest:(NSString *)queryString withJSONParams:(NSDictionary *)params;
-//- (void)sendGetRequest:(NSString *)queryString finishWithTarget:(id)target selector:(SEL)action;
 
 // Cancel request
 - (void)cancelRequest;

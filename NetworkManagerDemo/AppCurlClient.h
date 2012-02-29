@@ -13,12 +13,12 @@
 #import "Global.h"
 
 @interface AppCurlClient : NSObject <AiromoRequestDelegate> {
-    AppCurlClientTags _tag;
+    AiromoRequestTags _tag;
     AiromoRequestManager *_request;
     NSObject<AMDataReceiverDelegate> *_delegate;
 }
 
-@property (nonatomic, assign) AppCurlClientTags tag;
+@property (nonatomic, assign) AiromoRequestTags tag;
 @property (nonatomic, retain) AiromoRequestManager *request;
 @property (nonatomic, assign) NSObject<AMDataReceiverDelegate> *delegate;
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44429A7F14FE65E1004311F3 /* AiromoQueuedClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 44429A7E14FE65E1004311F3 /* AiromoQueuedClient.m */; };
+		44429A8314FE67A8004311F3 /* AMClient2.m in Sources */ = {isa = PBXBuildFile; fileRef = 44429A8214FE67A8004311F3 /* AMClient2.m */; };
 		445BFD9314F3C97F001140AC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 445BFD9214F3C97F001140AC /* UIKit.framework */; };
 		445BFD9514F3C97F001140AC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 445BFD9414F3C97F001140AC /* Foundation.framework */; };
 		445BFD9B14F3C97F001140AC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 445BFD9914F3C97F001140AC /* InfoPlist.strings */; };
@@ -30,6 +32,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		44429A7D14FE65E1004311F3 /* AiromoQueuedClient.h */ = {isa = PBXFileReference; fileEncoding = 4; path = AiromoQueuedClient.h; sourceTree = "<group>"; };
+		44429A7E14FE65E1004311F3 /* AiromoQueuedClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AiromoQueuedClient.m; sourceTree = "<group>"; };
+		44429A8114FE67A8004311F3 /* AMClient2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMClient2.h; sourceTree = "<group>"; };
+		44429A8214FE67A8004311F3 /* AMClient2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMClient2.m; sourceTree = "<group>"; };
 		445BFD8E14F3C97F001140AC /* NetworkManagerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkManagerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		445BFD9214F3C97F001140AC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		445BFD9414F3C97F001140AC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -126,6 +132,10 @@
 				44BF48FB14F7B3EE00A51F5D /* AMClient.m */,
 				44BF491A14FA788800A51F5D /* AppCurlClient.h */,
 				44BF491B14FA788800A51F5D /* AppCurlClient.m */,
+				44429A7D14FE65E1004311F3 /* AiromoQueuedClient.h */,
+				44429A7E14FE65E1004311F3 /* AiromoQueuedClient.m */,
+				44429A8114FE67A8004311F3 /* AMClient2.h */,
+				44429A8214FE67A8004311F3 /* AMClient2.m */,
 				445BFDB114F3CD0A001140AC /* AiromoRequestManager.h */,
 				445BFDB214F3CD0A001140AC /* AiromoRequestManager.m */,
 				44BF491914F98A9800A51F5D /* AMDataReceiverDelegate.h */,
@@ -250,6 +260,8 @@
 				44FB8A2214F3EB40001334B8 /* NSString+Extensions.m in Sources */,
 				44BF48FC14F7B3EE00A51F5D /* AMClient.m in Sources */,
 				44BF491C14FA788900A51F5D /* AppCurlClient.m in Sources */,
+				44429A7F14FE65E1004311F3 /* AiromoQueuedClient.m in Sources */,
+				44429A8314FE67A8004311F3 /* AMClient2.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

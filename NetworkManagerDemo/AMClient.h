@@ -23,8 +23,7 @@
     BOOL _rememberme;
 
     // Networking stuff
-    AMClientTags _tag;
-    AiromoRequestManager *_request;
+    NSMutableArray *_queue;
     NSObject<AMDataReceiverDelegate> *_delegate;
 }
 
@@ -33,8 +32,7 @@
 @property (nonatomic, retain) NSString *apnsToken;
 @property (nonatomic, retain) NSString *authToken;
 @property (nonatomic, assign) BOOL rememberme;
-@property (nonatomic, assign) AMClientTags tag;
-@property (nonatomic, retain) AiromoRequestManager *request;
+@property (nonatomic, retain) NSMutableArray *queue;
 @property (nonatomic, assign) NSObject<AMDataReceiverDelegate> *delegate;
 
 + (AMClient *)currentClient;
@@ -43,5 +41,6 @@
 - (void)startFacebookToken:(NSString*)token;
 - (void)signup:(NSString*)username password:(NSString*)password;
 - (void)logout;
+- (NSUInteger)aliveRequests;
 
 @end
