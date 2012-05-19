@@ -32,7 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		44429A7D14FE65E1004311F3 /* AiromoQueuedClient.h */ = {isa = PBXFileReference; fileEncoding = 4; path = AiromoQueuedClient.h; sourceTree = "<group>"; };
+		44429A7D14FE65E1004311F3 /* AiromoQueuedClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AiromoQueuedClient.h; sourceTree = "<group>"; };
 		44429A7E14FE65E1004311F3 /* AiromoQueuedClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AiromoQueuedClient.m; sourceTree = "<group>"; };
 		44429A8114FE67A8004311F3 /* AMClient2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMClient2.h; sourceTree = "<group>"; };
 		44429A8214FE67A8004311F3 /* AMClient2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMClient2.m; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 		445BFD8514F3C97F001140AC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = pankratov.net.ua;
 			};
 			buildConfigurationList = 445BFD8814F3C97F001140AC /* Build configuration list for PBXProject "NetworkManagerDemo" */;
@@ -346,6 +346,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NetworkManagerDemo/NetworkManagerDemo-Prefix.pch";
 				INFOPLIST_FILE = "NetworkManagerDemo/NetworkManagerDemo-Info.plist";
+				OTHER_CFLAGS = "-Wall";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -357,6 +358,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NetworkManagerDemo/NetworkManagerDemo-Prefix.pch";
 				INFOPLIST_FILE = "NetworkManagerDemo/NetworkManagerDemo-Info.plist";
+				OTHER_CFLAGS = (
+					"-DNS_BLOCK_ASSERTIONS=1",
+					"-Wall",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

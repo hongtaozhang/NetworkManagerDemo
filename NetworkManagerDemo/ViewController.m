@@ -40,6 +40,7 @@
     [_shadowView release];
     [_log release];
     [_quickSearchSwitch release];
+    [super dealloc];
 }
 
 - (void)addLogMessage:(NSString *)message
